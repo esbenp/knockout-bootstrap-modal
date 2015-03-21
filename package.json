@@ -1,0 +1,28 @@
+{
+  "name": "knockout-bootstrap-modal",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esbenp/knockout-bootstrap-modal.git"
+  },
+  "author": "",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/esbenp/knockout-bootstrap-modal/issues"
+  },
+  "homepage": "https://github.com/esbenp/knockout-bootstrap-modal",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^1.1.0",
+    "gulp-umd": "^0.1.3"
+  }
+}
