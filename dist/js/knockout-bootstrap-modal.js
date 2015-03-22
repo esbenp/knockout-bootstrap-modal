@@ -1,12 +1,12 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['jquery', 'knockout', 'bootstrap', 'text!knockout-bootstrap-modal-html', 'require'], factory);
+    define(['jquery', 'knockout', 'bootstrap', 'text!knockout-bootstrap-modal-html', 'require', 'knockout-undomanager'], factory);
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('jquery'), require('knockout'), require('bootstrap'), require('text!knockout-bootstrap-modal-html'), require('require'));
+    module.exports = factory(require('jquery'), require('knockout'), require('bootstrap'), require('text!knockout-bootstrap-modal-html'), require('require'), require('knockout-undomanager'));
   } else {
-    root.KnockoutBootstrapModal = factory(root.jQuery, root.ko, root.jQuery, root.KnockoutBootstrapModalHtml, root.jQuery);
+    root.KnockoutBootstrapModal = factory(root.jQuery, root.ko, root.jQuery, root.KnockoutBootstrapModalHtml, root.jQuery, root.knockoutUndoManager);
   }
-}(this, function($, ko, bootstrap, html, require) {
+}(this, function($, ko, bootstrap, html, require, undomanager) {
 if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal = {}; }
 
 /**
@@ -113,13 +113,23 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     };
 
     var closeClick = function(context, e) {
-        
+        this.undoRedoStack.undoCommand.execute();
+        fireIfFunction(this.variables.callbacks.close);
+        this.hide();
+
         return true;
     }
 
     var saveClick = function(context, e) {
-        
+        this.hide();
+        fireIfFunction(this.variables.callbacks.save);
+
         return true;
+    }
+
+    Modal.prototype.close = function(closeFunction) {
+        this.variables.callbacks.close = closeFunction;
+        return this;
     }
 
     Modal.prototype.closeButton = function(closeButton) {
@@ -174,6 +184,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     Modal.prototype.viewmodel = function(viewmodel) {
         this.variables.viewmodel = viewmodel;
+        this.undoRedoStack = undomanager(this.variables.viewmodel);
         return this;
     };
 
@@ -275,6 +286,20 @@ var evaluateInputAsNodeElement = function(input, throwOnFail) {
 
         return element;
     }
+}
+
+var fireIfFunction = function(){
+    var func = arguments[0];
+    var args = Array.prototype.slice.call(arguments);
+
+    // remove the function
+    args.shift();
+
+    if (typeof func === "function") {
+        return func.apply(this, args);
+    }
+
+    return false;
 }
 return KnockoutBootstrapModal.Modal;
 }));

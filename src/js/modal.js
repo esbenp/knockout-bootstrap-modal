@@ -38,13 +38,23 @@
     };
 
     var closeClick = function(context, e) {
-        
+        this.undoRedoStack.undoCommand.execute();
+        fireIfFunction(this.variables.callbacks.close);
+        this.hide();
+
         return true;
     }
 
     var saveClick = function(context, e) {
-        
+        this.hide();
+        fireIfFunction(this.variables.callbacks.save);
+
         return true;
+    }
+
+    Modal.prototype.close = function(closeFunction) {
+        this.variables.callbacks.close = closeFunction;
+        return this;
     }
 
     Modal.prototype.closeButton = function(closeButton) {
@@ -99,6 +109,7 @@
 
     Modal.prototype.viewmodel = function(viewmodel) {
         this.variables.viewmodel = viewmodel;
+        this.undoRedoStack = undomanager(this.variables.viewmodel);
         return this;
     };
 

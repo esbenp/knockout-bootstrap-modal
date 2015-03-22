@@ -17,3 +17,17 @@ var evaluateInputAsNodeElement = function(input, throwOnFail) {
         return element;
     }
 }
+
+var fireIfFunction = function(){
+    var func = arguments[0];
+    var args = Array.prototype.slice.call(arguments);
+
+    // remove the function
+    args.shift();
+
+    if (typeof func === "function") {
+        return func.apply(this, args);
+    }
+
+    return false;
+}
