@@ -12,9 +12,9 @@
   ],
   "dependencies": {
     "knockout": "~3.3.0",
-    "bootstrap": "~3.3.4"
-  },
-  "devDependencies": {
-    "requirejs": "~2.1.16"
+    "bootstrap": "~3.3.4",
+    "requirejs": "~2.1.16",
+    "requirejs-text": "~2.0.14",
+    "jquery": "~2.1.3"
   }
 }
