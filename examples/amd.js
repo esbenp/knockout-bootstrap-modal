@@ -1,6 +1,7 @@
 requirejs.config({
     baseUrl: '../bower_components',
     paths: {
+        assets: "../examples/assets",
         dist: "../dist",
 
         bootstrap: "bootstrap/dist/js/bootstrap",
@@ -24,8 +25,12 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
 
     ViewModel.prototype = {
         openModal: function() {
-            modal()
-            .template("examples/assets/modal.html")
+            var instance = modal()
+            .template("<div data-bind='text: fedelort'></div>")
+            .title("Something")
+            .viewmodel({
+                fedelort: "Hej"
+            })
             .save(function(){
                 console.log("saving")
             })

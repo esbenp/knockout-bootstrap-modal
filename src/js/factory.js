@@ -1,53 +1,63 @@
+/**
+ * FACTORY
+ * 
+ * @param  {[type]} namespace [description]
+ * @param  {[type]} markup    [description]
+ * @return {[type]}           [description]
+ */
 (function(namespace, markup){
-	"use strict";
+    "use strict";
 
-	var Factory = function(instance, container) {
-		this.instance = instance;
+    var Factory = function(instance, container) {
+        this.instance = instance;
+        this.initialize(container);
 
-		this.initialize(container);
-	}
+        var template = new namespace.Template(this.instance);
+    }
 
-	Factory.prototype.createContainerFromHtml = function(html) {
-		var container = $(html);
-		container.appendTo(this.instance.settings.appendContainerTo);
-		return container;
-	};
+    Factory.prototype.createContainerFromHtml = function(html) {
+        var container = $(html);
+        var appendTo  = $(this.instance.settings.appendContainerTo);
 
-	Factory.prototype.evaluateContainerInput = function(input) {
-		// Input is a javascript node
-		if (input.nodeType) {
-			return $(input);
-		// Input is a jQuery instance
-		} else if(input instanceof jQuery) {
-			return input;
-		// Fallback: input is a selector
-		} else {
-			return $(input);
-		}
-	};
+        if (appendTo.length === 0) {
+            throw Error("Knockout-bootstrap-modal: Could not find an element with selector '" + 
+                        this.instance.settings.appendContainerTo + "' to append the modal container " +
+                        "to.");
+        }
 
-	Factory.prototype.initialize = function(container) {
-		// No container was given in the constructor
-		if (typeof container !== "undefined") {
-			this.setContainer(container);
-		// Try create container from injected markup
-		} else if(typeof html !== "undefined") {
-			this.setContainer(this.createContainerFromHtml(html));
-		// No container was created
-		} else {
-			throw Error("Knockout-bootstrap-modal: No valid container was given.");
-		}
-	};
+        container.appendTo(appendTo);
 
-	Factory.prototype.setContainer = function(container) {
-		var container = this.evaluateContainerInput(container);
+        return container;
+    };
 
-		if (container.length === 0) {
-			throw Error("Knockout-bootstrap-modal: Could not find container with selector " + container);
-		}
+    Factory.prototype.evaluateContainerInput = function(input) {
+        return evaluateInputAsNodeElement(input);
+    };
 
-		this.instance.container = container;
-	};
+    Factory.prototype.initialize = function(container) {
+        // No container was given in the constructor
+        if (typeof container !== "undefined") {
+            return this.setContainer(container);
+        // Try create container from injected markup
+        } else if(typeof html !== "undefined") {
+            return this.setContainer(this.createContainerFromHtml(html));
+        // No container was created
+        } else {
+            throw Error("Knockout-bootstrap-modal: No valid container was given.");
+        }
+    };
 
-	namespace.Factory = Factory;
+    Factory.prototype.setContainer = function(container) {
+        var container = this.evaluateContainerInput(container);
+
+        if (container.length === 0) {
+            throw Error("Knockout-bootstrap-modal: Could not find container with selector " + container);
+        }
+
+        this.instance.container = container;
+
+        return container;
+    };
+
+    namespace.Factory = Factory;
 })(KnockoutBootstrapModal, html);
