@@ -59,6 +59,13 @@ gulp.task("umd", ["concat"], function() {
                         cjs: "knockout-undomanager",
                         global: "knockoutUndoManager",
                         param: "undomanager"
+                    },
+                    {
+                        name: "mapping",
+                        amd: "knockout-mapping",
+                        cjs: "knockout-mapping",
+                        global: "ko['mapping']",
+                        param: "mapping"
                     }
                 ];
             },

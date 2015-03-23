@@ -7,6 +7,7 @@ requirejs.config({
         bootstrap: "bootstrap/dist/js/bootstrap",
         jquery: "jquery/dist/jquery",
         knockout: "knockout/dist/knockout",
+        "knockout-mapping": "bower-knockout-mapping/dist/knockout.mapping",
         "knockout-reactor": "knockoutjs-reactor-bower/knockout.reactor-beta",
         "knockout-undomanager": "knockout-undomanager-bower/knockout-undomanager-0.2",
         text: "requirejs-text/text",
@@ -34,16 +35,16 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, 
             .template("assets/modal.html", true)
             .large()
             .title("Something")
-            .viewmodel(this.viewmodel)
+            .viewmodel({
+                stock: [
+                    {variable: "hej"},
+                    {variable: "nej"}
+                ]
+            })
             .save(function(promise, viewmodel){
                 promise.resolve(true);
             })
             .show();
-
-            setTimeout(function(){
-                self.viewmodel.variable("HEJ");
-                self.viewmodel.variable("MEN");
-            }, 1500);
         }
     };
 

@@ -10,6 +10,7 @@
     var Modal = function(modal, settings) {
         this.container;
         this.settings = $.extend(Modal.DEFAULTS, settings || {});
+        this.variables = {};
         reset.call(this);
 
         this.factory = new namespace.Factory(this, modal);
@@ -27,16 +28,19 @@
         closeClick: null,
         saveClick: null,
         saving: false,
-        template: ko.observable(""),
+        // templateIsExternal has to be before template, so when 
+        // resetting, template's subscriber will pick up the new 
+        // templateIsExternal value as well.
         templateIsExternal: false,
+        template: "<div></div>",
         templateVariables: {
-            closeButton: ko.observable(true),
-            closeCross: ko.observable(true),
-            footer: ko.observable(true),
-            header: ko.observable(true),
-            large: ko.observable(false),
-            saveButton: ko.observable(true),
-            title: ko.observable(false)
+            closeButton: true,
+            closeCross: true,
+            footer: true,
+            header: true,
+            large: false,
+            saveButton: true,
+            title: false
         },
         viewmodel: {}
     };
@@ -73,10 +77,11 @@
     }
 
     var reset = function() {
-        this.variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
+        var variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
             closeClick: closeClick.bind(this), 
             saveClick: saveClick.bind(this)
         });
+        mapping.fromJS(variables, {}, this.variables);
     }
 
     Modal.prototype.close = function(closeFunction) {
