@@ -73,9 +73,16 @@
     };
 
     Modal.prototype.show = function() {
-        ko.applyBindings(this.variables, this.container[0]);
+        var self = this;
 
-        this.container.modal("show");
+        // Knockout bindings cannot be applied until the subview has been 
+        // inserted. Otherwise, component elements are not going to be
+        // rendered
+        $.when(this.templatePromise).then(function(){
+            ko.applyBindings(self.variables, self.container[0]);
+            self.container.modal("show");
+        });
+        
         return this;
     };
 

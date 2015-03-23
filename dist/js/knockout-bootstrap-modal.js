@@ -22,6 +22,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     var Factory = function(instance, container) {
         this.instance = instance;
         this.initialize(container);
+        this.initializeModal();
 
         var template = new namespace.Template(this.instance);
     }
@@ -56,6 +57,12 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         } else {
             throw Error("Knockout-bootstrap-modal: No valid container was given.");
         }
+    };
+
+    Factory.prototype.initializeModal = function() {
+        this.instance.container.modal({
+            show: false
+        });
     };
 
     Factory.prototype.setContainer = function(container) {
@@ -148,9 +155,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     };
 
     Modal.prototype.show = function() {
-        ko.applyBindings(this.variables, this.container[0]);
+        var self = this;
 
-        this.container.modal("show");
+        $.when(this.templatePromise).then(function(){
+            ko.applyBindings(self.variables, self.container[0]);
+            self.container.modal("show");
+        });
+        
         return this;
     };
 
@@ -203,12 +214,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     var Template = function(instance) {
         this.instance = instance;
+        this.instance.templatePromise = this.setupTemplateContentPromise();
         
         this.setupTemplateListener(this.instance);
     }
 
     Template.prototype.insertTemplate = function(templateContent) {
-        var modalBody = evaluateInputAsNodeElement(this.instance.settings.body);
+        var modalBody = evaluateInputAsNodeElement(this.instance.settings.body, this.instance.container);
         var templateContent = $(templateContent);
 
         modalBody.html("");
@@ -247,20 +259,20 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
         instance.variables.template.subscribe(function(newTemplate){
             var isExternal = instance.variables.templateIsExternal;
-            var promise = self.setupTemplateContentPromise();
+            self.instance.templatePromise = self.setupTemplateContentPromise();
 
             // Content should be externally loaded
             if (isExternal) {
                 // Fallback for global variables
                 if (require instanceof jQuery) {
-                    self.loadExternalUsingjQuery(newTemplate, promise);
+                    self.loadExternalUsingjQuery(newTemplate, self.instance.templatePromise);
                 // Require is available
                 } else {
-                    self.loadExternalUsingRequire(newTemplate, promise);
+                    self.loadExternalUsingRequire(newTemplate, self.instance.templatePromise);
                 }
             // The template passed was html
             } else {
-                promise.resolve(newTemplate);
+                self.instance.templatePromise.resolve(newTemplate);
             }
         });
     }
@@ -268,16 +280,16 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     namespace.Template = Template;
 })(KnockoutBootstrapModal, require);
 
-var evaluateInputAsNodeElement = function(input, throwOnFail) {
+var evaluateInputAsNodeElement = function(input, context, throwOnFail) {
     // Input is a javascript node
     if (input.nodeType) {
-        return $(input);
+        return $(input, context);
     // Input is a jQuery instance
     } else if(input instanceof jQuery) {
         return input;
     // Fallback: input is a selector
     } else {
-        var element = $(input);
+        var element = $(input, context);
 
         if (element.length === 0 && throwOnFail !== false) {
             throw Error("Knockout-bootstrap-modal: Could not find element with selector '" 

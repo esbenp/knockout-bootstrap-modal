@@ -11,6 +11,7 @@
     var Factory = function(instance, container) {
         this.instance = instance;
         this.initialize(container);
+        this.initializeModal();
 
         var template = new namespace.Template(this.instance);
     }
@@ -45,6 +46,12 @@
         } else {
             throw Error("Knockout-bootstrap-modal: No valid container was given.");
         }
+    };
+
+    Factory.prototype.initializeModal = function() {
+        this.instance.container.modal({
+            show: false
+        });
     };
 
     Factory.prototype.setContainer = function(container) {

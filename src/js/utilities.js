@@ -1,13 +1,13 @@
-var evaluateInputAsNodeElement = function(input, throwOnFail) {
+var evaluateInputAsNodeElement = function(input, context, throwOnFail) {
     // Input is a javascript node
     if (input.nodeType) {
-        return $(input);
+        return $(input, context);
     // Input is a jQuery instance
     } else if(input instanceof jQuery) {
         return input;
     // Fallback: input is a selector
     } else {
-        var element = $(input);
+        var element = $(input, context);
 
         if (element.length === 0 && throwOnFail !== false) {
             throw Error("Knockout-bootstrap-modal: Could not find element with selector '" 

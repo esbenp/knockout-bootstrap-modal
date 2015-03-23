@@ -10,12 +10,13 @@
 
     var Template = function(instance) {
         this.instance = instance;
+        this.instance.templatePromise = this.setupTemplateContentPromise();
         
         this.setupTemplateListener(this.instance);
     }
 
     Template.prototype.insertTemplate = function(templateContent) {
-        var modalBody = evaluateInputAsNodeElement(this.instance.settings.body);
+        var modalBody = evaluateInputAsNodeElement(this.instance.settings.body, this.instance.container);
         var templateContent = $(templateContent);
 
         modalBody.html("");
@@ -54,20 +55,20 @@
 
         instance.variables.template.subscribe(function(newTemplate){
             var isExternal = instance.variables.templateIsExternal;
-            var promise = self.setupTemplateContentPromise();
+            self.instance.templatePromise = self.setupTemplateContentPromise();
 
             // Content should be externally loaded
             if (isExternal) {
                 // Fallback for global variables
                 if (require instanceof jQuery) {
-                    self.loadExternalUsingjQuery(newTemplate, promise);
+                    self.loadExternalUsingjQuery(newTemplate, self.instance.templatePromise);
                 // Require is available
                 } else {
-                    self.loadExternalUsingRequire(newTemplate, promise);
+                    self.loadExternalUsingRequire(newTemplate, self.instance.templatePromise);
                 }
             // The template passed was html
             } else {
-                promise.resolve(newTemplate);
+                self.instance.templatePromise.resolve(newTemplate);
             }
         });
     }

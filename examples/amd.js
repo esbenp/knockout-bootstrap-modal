@@ -20,7 +20,7 @@ requirejs.config({
     }
 });
 
-requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
+requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, selectize){
     function ViewModel() {
         this.viewmodel = {
             variable: ko.observable("YO")
