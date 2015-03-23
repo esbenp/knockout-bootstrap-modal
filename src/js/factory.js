@@ -52,7 +52,21 @@
         this.instance.container.modal({
             show: false
         });
+
+        this.setupEvents();
     };
+
+    Factory.prototype.onModalHide = function() {
+        if (this.instance.variables.saving === false) {
+            var undo = this.instance.undoRedoStack.undoCommand;
+
+            // One execution will only move 1 step back in history
+            // we need to move back till the start of history
+            while(undo.enabled()) {
+                undo.execute();
+            }
+        }
+    }
 
     Factory.prototype.setContainer = function(container) {
         var container = this.evaluateContainerInput(container);
@@ -65,6 +79,10 @@
 
         return container;
     };
+
+    Factory.prototype.setupEvents = function() {
+        this.instance.container.on("hide.bs.modal", this.onModalHide.bind(this));
+    }
 
     namespace.Factory = Factory;
 })(KnockoutBootstrapModal, html);

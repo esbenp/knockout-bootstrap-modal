@@ -63,7 +63,21 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.instance.container.modal({
             show: false
         });
+
+        this.setupEvents();
     };
+
+    Factory.prototype.onModalHide = function() {
+        if (this.instance.variables.saving === false) {
+            var undo = this.instance.undoRedoStack.undoCommand;
+
+            // One execution will only move 1 step back in history
+            // we need to move back till the start of history
+            while(undo.enabled()) {
+                undo.execute();
+            }
+        }
+    }
 
     Factory.prototype.setContainer = function(container) {
         var container = this.evaluateContainerInput(container);
@@ -76,6 +90,10 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
         return container;
     };
+
+    Factory.prototype.setupEvents = function() {
+        this.instance.container.on("hide.bs.modal", this.onModalHide.bind(this));
+    }
 
     namespace.Factory = Factory;
 })(KnockoutBootstrapModal, html);
@@ -98,6 +116,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             },
             closeClick: closeClick.bind(this),
             saveClick: saveClick.bind(this),
+            saving: false,
             template: ko.observable(""),
             templateIsExternal: false,
             templateVariables: {
@@ -121,13 +140,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     var closeClick = function(context, e) {
         var self = this;
-        var undo = this.undoRedoStack.undoCommand;
-
-        // One execution will only move 1 step back in history
-        // we need to move back till the start of history
-        while(undo.enabled()) {
-            undo.execute();
-        }
+        
         fireIfFunction(this.variables.callbacks.close);
         this.hide();
 
@@ -135,8 +148,10 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     }
 
     var saveClick = function(context, e) {
+        this.saving = true;
         this.hide();
         fireIfFunction(this.variables.callbacks.save);
+        this.saving = false;
 
         return true;
     }

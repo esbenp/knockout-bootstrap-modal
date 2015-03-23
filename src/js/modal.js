@@ -16,6 +16,7 @@
             },
             closeClick: closeClick.bind(this),
             saveClick: saveClick.bind(this),
+            saving: false,
             template: ko.observable(""),
             templateIsExternal: false,
             templateVariables: {
@@ -39,13 +40,7 @@
 
     var closeClick = function(context, e) {
         var self = this;
-        var undo = this.undoRedoStack.undoCommand;
-
-        // One execution will only move 1 step back in history
-        // we need to move back till the start of history
-        while(undo.enabled()) {
-            undo.execute();
-        }
+        
         fireIfFunction(this.variables.callbacks.close);
         this.hide();
 
@@ -53,8 +48,10 @@
     }
 
     var saveClick = function(context, e) {
+        this.saving = true;
         this.hide();
         fireIfFunction(this.variables.callbacks.save);
+        this.saving = false;
 
         return true;
     }
