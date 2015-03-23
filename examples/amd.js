@@ -12,7 +12,13 @@ requirejs.config({
         "knockout-undomanager": "knockout-undomanager-bower/knockout-undomanager-0.2",
         text: "requirejs-text/text",
 
-        "knockout-bootstrap-modal-html": "../dist/html/modal.html"
+        "knockout-bootstrap-modal-html": "../dist/html/modal.html",
+        "knockout-selectize": "knockout-selectize/src/js/knockout-selectize",
+        "knockout-selectize-html": "knockout-selectize/src/html",
+        microplugin: "microplugin/src/microplugin",
+        "selectable-placeholder": "knockout-selectize/plugins/selectablePlaceholder",
+        selectize: "selectize/dist/js/selectize",
+        sifter: "sifter/sifter.min"
     },
     shim: {
         bootstrap: {
@@ -21,10 +27,10 @@ requirejs.config({
     }
 });
 
-requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, selectize){
+requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-selectize", "knockout-undomanager"], function(ko, modal, selectize, undomanager){
     function ViewModel() {
         this.viewmodel = {
-            variable: ko.observable("YO")
+            variable: ko.observable()
         }
     }
 
@@ -35,12 +41,7 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, 
             .template("assets/modal.html", true)
             .large()
             .title("Something")
-            .viewmodel({
-                stock: [
-                    {variable: "hej"},
-                    {variable: "nej"}
-                ]
-            })
+            .viewmodel(self.viewmodel)
             .save(function(promise, viewmodel){
                 promise.resolve(true);
             })

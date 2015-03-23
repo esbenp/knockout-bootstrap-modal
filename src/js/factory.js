@@ -12,7 +12,7 @@
         this.instance = instance;
         this.initialize(container);
         this.initializeModal();
-
+        
         var template = new namespace.Template(this.instance);
     }
 
@@ -63,8 +63,6 @@
         this.instance.container.modal({
             show: false
         });
-
-        this.setupEvents();
     };
 
     Factory.prototype.onModalHide = function() {

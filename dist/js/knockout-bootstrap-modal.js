@@ -23,7 +23,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.instance = instance;
         this.initialize(container);
         this.initializeModal();
-
+        
         var template = new namespace.Template(this.instance);
     }
 
@@ -74,8 +74,6 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.instance.container.modal({
             show: false
         });
-
-        this.setupEvents();
     };
 
     Factory.prototype.onModalHide = function() {
@@ -168,7 +166,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     var saveClick = function(context, e) {
         // Used so the viewmodel is not reverted back when users click
         // the save button.
-        this.saving = true;
+        this.variables.saving = true;
 
         var promise = this.factory.createHidingPromise();
 
@@ -182,7 +180,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             promise.resolve(true);
         }
 
-        this.saving = false;
+        this.variables.saving = false;
 
         return true;
     }
@@ -192,7 +190,9 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             closeClick: closeClick.bind(this), 
             saveClick: saveClick.bind(this)
         });
-        mapping.fromJS(variables, {}, this.variables);
+        mapping.fromJS(variables, {
+            copy: ["saving", "templateIsExternal"]
+        }, this.variables);
     }
 
     Modal.prototype.close = function(closeFunction) {
@@ -232,8 +232,10 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         $.when(this.templatePromise).then(function(){
             // Have to clean node before, as to not reapply bindings 
             ko.cleanNode(self.container[0]);
+            // Has to be done here, as cleanNode will remove events
+            self.factory.setupEvents();
             ko.applyBindings(self.variables, self.container[0]);
-            self.container.modal("show");
+            self.container.modal("show");   
         });
         
         return this;

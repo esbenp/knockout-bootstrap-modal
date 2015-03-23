@@ -57,7 +57,7 @@
     var saveClick = function(context, e) {
         // Used so the viewmodel is not reverted back when users click
         // the save button.
-        this.saving = true;
+        this.variables.saving = true;
 
         var promise = this.factory.createHidingPromise();
 
@@ -71,7 +71,7 @@
             promise.resolve(true);
         }
 
-        this.saving = false;
+        this.variables.saving = false;
 
         return true;
     }
@@ -81,7 +81,9 @@
             closeClick: closeClick.bind(this), 
             saveClick: saveClick.bind(this)
         });
-        mapping.fromJS(variables, {}, this.variables);
+        mapping.fromJS(variables, {
+            copy: ["saving", "templateIsExternal"]
+        }, this.variables);
     }
 
     Modal.prototype.close = function(closeFunction) {
@@ -121,8 +123,10 @@
         $.when(this.templatePromise).then(function(){
             // Have to clean node before, as to not reapply bindings 
             ko.cleanNode(self.container[0]);
+            // Has to be done here, as cleanNode will remove events
+            self.factory.setupEvents();
             ko.applyBindings(self.variables, self.container[0]);
-            self.container.modal("show");
+            self.container.modal("show");   
         });
         
         return this;
