@@ -34,6 +34,7 @@
             closeCross: ko.observable(true),
             footer: ko.observable(true),
             header: ko.observable(true),
+            large: ko.observable(false),
             saveButton: ko.observable(true),
             title: ko.observable(false)
         },
@@ -97,6 +98,14 @@
         this.container.modal("hide");
         return this;
     };
+
+    Modal.prototype.large = function(large) {
+        if (typeof large === "undefined") {
+            large = true;
+        }
+        this.variables.templateVariables.large(large);
+        return this;
+    }
 
     Modal.prototype.show = function() {
         var self = this;
