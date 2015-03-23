@@ -10,26 +10,8 @@
     var Modal = function(modal, settings) {
         this.container;
         this.settings = $.extend(Modal.DEFAULTS, settings || {});
-        this.variables = {
-            callbacks: {
+        reset.call(this);
 
-            },
-            closeClick: closeClick.bind(this),
-            saveClick: saveClick.bind(this),
-            saving: false,
-            template: ko.observable(""),
-            templateIsExternal: false,
-            templateVariables: {
-                closeButton: ko.observable(true),
-                closeCross: ko.observable(true),
-                footer: ko.observable(true),
-                header: ko.observable(true),
-                saveButton: ko.observable(true),
-                title: ko.observable(false)
-            },
-            viewmodel: {}
-        };
-     
         this.factory = new namespace.Factory(this, modal);
     }
 
@@ -38,9 +20,29 @@
         "body": ".modal-body"
     };
 
+    Modal.VARIABLE_DEFAULTS = {
+        callbacks: {
+
+        },
+        closeClick: null,
+        saveClick: null,
+        saving: false,
+        template: ko.observable(""),
+        templateIsExternal: false,
+        templateVariables: {
+            closeButton: ko.observable(true),
+            closeCross: ko.observable(true),
+            footer: ko.observable(true),
+            header: ko.observable(true),
+            saveButton: ko.observable(true),
+            title: ko.observable(false)
+        },
+        viewmodel: {}
+    };
+
     var closeClick = function(context, e) {
         var self = this;
-        
+
         fireIfFunction(this.variables.callbacks.close);
         this.hide();
 
@@ -67,6 +69,13 @@
         this.saving = false;
 
         return true;
+    }
+
+    var reset = function() {
+        this.variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
+            closeClick: closeClick.bind(this), 
+            saveClick: saveClick.bind(this)
+        });
     }
 
     Modal.prototype.close = function(closeFunction) {
@@ -96,6 +105,8 @@
         // inserted. Otherwise, component elements are not going to be
         // rendered
         $.when(this.templatePromise).then(function(){
+            // Have to clean node before, as to not reapply bindings 
+            ko.cleanNode(self.container[0]);
             ko.applyBindings(self.variables, self.container[0]);
             self.container.modal("show");
         });
@@ -137,5 +148,15 @@
         return this;
     };
 
-    namespace.Modal = function() { return new Modal; };
+    namespace.Modal = function() {
+        if (namespace.Modal.prototype._singletonInstance) {
+            reset.call(namespace.Modal.prototype._singletonInstance);
+            return namespace.Modal.prototype._singletonInstance;
+        }
+
+        var instance = new Modal;
+        namespace.Modal.prototype._singletonInstance = instance;
+
+        return instance;
+    };
 })(KnockoutBootstrapModal);
