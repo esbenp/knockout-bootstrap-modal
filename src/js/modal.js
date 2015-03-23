@@ -38,7 +38,14 @@
     };
 
     var closeClick = function(context, e) {
-        this.undoRedoStack.undoCommand.execute();
+        var self = this;
+        var undo = this.undoRedoStack.undoCommand;
+
+        // One execution will only move 1 step back in history
+        // we need to move back till the start of history
+        while(undo.enabled()) {
+            undo.execute();
+        }
         fireIfFunction(this.variables.callbacks.close);
         this.hide();
 

@@ -29,6 +29,7 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, 
 
     ViewModel.prototype = {
         openModal: function() {
+            var self = this;
             var instance = modal()
             .template("assets/modal.html", true)
             .title("Something")
@@ -37,6 +38,11 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, 
                 console.log("saving")
             })
             .show();
+
+            setTimeout(function(){
+                self.viewmodel.variable("HEJ");
+                self.viewmodel.variable("MEN");
+            }, 1500);
         }
     };
 

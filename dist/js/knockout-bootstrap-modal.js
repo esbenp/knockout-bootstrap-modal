@@ -120,7 +120,14 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     };
 
     var closeClick = function(context, e) {
-        this.undoRedoStack.undoCommand.execute();
+        var self = this;
+        var undo = this.undoRedoStack.undoCommand;
+
+        // One execution will only move 1 step back in history
+        // we need to move back till the start of history
+        while(undo.enabled()) {
+            undo.execute();
+        }
         fireIfFunction(this.variables.callbacks.close);
         this.hide();
 
@@ -157,6 +164,9 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     Modal.prototype.show = function() {
         var self = this;
 
+        // Knockout bindings cannot be applied until the subview has been 
+        // inserted. Otherwise, component elements are not going to be
+        // rendered
         $.when(this.templatePromise).then(function(){
             ko.applyBindings(self.variables, self.container[0]);
             self.container.modal("show");
