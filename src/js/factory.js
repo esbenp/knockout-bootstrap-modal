@@ -16,6 +16,17 @@
         var template = new namespace.Template(this.instance);
     }
 
+    Factory.prototype.createHidingPromise = function() {
+        var self = this;
+        var promise = $.Deferred();
+
+        $.when(promise).then(function(){
+            self.instance.hide();
+        });
+
+        return promise;
+    }
+
     Factory.prototype.createContainerFromHtml = function(html) {
         var container = $(html);
         var appendTo  = $(this.instance.settings.appendContainerTo);

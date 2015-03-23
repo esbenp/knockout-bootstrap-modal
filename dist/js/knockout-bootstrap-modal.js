@@ -27,6 +27,17 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         var template = new namespace.Template(this.instance);
     }
 
+    Factory.prototype.createHidingPromise = function() {
+        var self = this;
+        var promise = $.Deferred();
+
+        $.when(promise).then(function(){
+            self.instance.hide();
+        });
+
+        return promise;
+    }
+
     Factory.prototype.createContainerFromHtml = function(html) {
         var container = $(html);
         var appendTo  = $(this.instance.settings.appendContainerTo);
@@ -130,7 +141,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             viewmodel: {}
         };
      
-        var factory = new namespace.Factory(this, modal);
+        this.factory = new namespace.Factory(this, modal);
     }
 
     Modal.DEFAULTS = {
@@ -148,9 +159,22 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     }
 
     var saveClick = function(context, e) {
+        // Used so the viewmodel is not reverted back when users click
+        // the save button.
         this.saving = true;
-        this.hide();
-        fireIfFunction(this.variables.callbacks.save);
+
+        var promise = this.factory.createHidingPromise();
+
+        // If there is specified a save callback, send a hide promise
+        // so the modal can be hidden if a certain logic passes
+        if (isFunction(this.variables.callbacks.save)) {
+            this.variables.callbacks.save.call(this, promise, this.variables.viewmodel);
+        // If no save callback is specified, proceed with hiding the
+        // modal
+        } else {
+            promise.resolve(true);
+        }
+
         this.saving = false;
 
         return true;
@@ -332,11 +356,15 @@ var fireIfFunction = function(){
     // remove the function
     args.shift();
 
-    if (typeof func === "function") {
+    if (isFunction(func)) {
         return func.apply(this, args);
     }
 
     return false;
+}
+
+var isFunction = function(input) {
+    return input instanceof Function;
 }
 return KnockoutBootstrapModal.Modal;
 }));

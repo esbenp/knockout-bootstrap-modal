@@ -25,9 +25,13 @@ var fireIfFunction = function(){
     // remove the function
     args.shift();
 
-    if (typeof func === "function") {
+    if (isFunction(func)) {
         return func.apply(this, args);
     }
 
     return false;
+}
+
+var isFunction = function(input) {
+    return input instanceof Function;
 }

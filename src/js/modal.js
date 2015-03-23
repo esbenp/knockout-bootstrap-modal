@@ -30,7 +30,7 @@
             viewmodel: {}
         };
      
-        var factory = new namespace.Factory(this, modal);
+        this.factory = new namespace.Factory(this, modal);
     }
 
     Modal.DEFAULTS = {
@@ -48,9 +48,22 @@
     }
 
     var saveClick = function(context, e) {
+        // Used so the viewmodel is not reverted back when users click
+        // the save button.
         this.saving = true;
-        this.hide();
-        fireIfFunction(this.variables.callbacks.save);
+
+        var promise = this.factory.createHidingPromise();
+
+        // If there is specified a save callback, send a hide promise
+        // so the modal can be hidden if a certain logic passes
+        if (isFunction(this.variables.callbacks.save)) {
+            this.variables.callbacks.save.call(this, promise, this.variables.viewmodel);
+        // If no save callback is specified, proceed with hiding the
+        // modal
+        } else {
+            promise.resolve(true);
+        }
+
         this.saving = false;
 
         return true;
