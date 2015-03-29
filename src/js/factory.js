@@ -2,10 +2,9 @@
  * FACTORY
  * 
  * @param  {[type]} namespace [description]
- * @param  {[type]} markup    [description]
  * @return {[type]}           [description]
  */
-(function(namespace, markup){
+(function(namespace){
     "use strict";
 
     var Factory = function(instance, container) {
@@ -94,4 +93,4 @@
     }
 
     namespace.Factory = Factory;
-})(KnockoutBootstrapModal, html);
+})(KnockoutBootstrapModal);

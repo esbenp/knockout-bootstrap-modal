@@ -13,10 +13,9 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
  * FACTORY
  * 
  * @param  {[type]} namespace [description]
- * @param  {[type]} markup    [description]
  * @return {[type]}           [description]
  */
-(function(namespace, markup){
+(function(namespace){
     "use strict";
 
     var Factory = function(instance, container) {
@@ -105,7 +104,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     }
 
     namespace.Factory = Factory;
-})(KnockoutBootstrapModal, html);
+})(KnockoutBootstrapModal);
 
 /**
  * MODAL
@@ -369,7 +368,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 var evaluateInputAsNodeElement = function(input, context, throwOnFail) {
     // Input is a javascript node
     if (input.nodeType) {
-        return $(input, context);
+        return $(input);
     // Input is a jQuery instance
     } else if(input instanceof jQuery) {
         return input;
@@ -388,16 +387,17 @@ var evaluateInputAsNodeElement = function(input, context, throwOnFail) {
 
 var fireIfFunction = function(){
     var func = arguments[0];
+
+    if (!isFunction(func)) {
+        return false;
+    }
+
     var args = Array.prototype.slice.call(arguments);
 
     // remove the function
     args.shift();
-
-    if (isFunction(func)) {
-        return func.apply(this, args);
-    }
-
-    return false;
+    
+    return func.apply(this, args);
 }
 
 var isFunction = function(input) {

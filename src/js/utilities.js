@@ -1,7 +1,7 @@
 var evaluateInputAsNodeElement = function(input, context, throwOnFail) {
     // Input is a javascript node
     if (input.nodeType) {
-        return $(input, context);
+        return $(input);
     // Input is a jQuery instance
     } else if(input instanceof jQuery) {
         return input;
@@ -20,16 +20,17 @@ var evaluateInputAsNodeElement = function(input, context, throwOnFail) {
 
 var fireIfFunction = function(){
     var func = arguments[0];
+
+    if (!isFunction(func)) {
+        return false;
+    }
+
     var args = Array.prototype.slice.call(arguments);
 
     // remove the function
     args.shift();
-
-    if (isFunction(func)) {
-        return func.apply(this, args);
-    }
-
-    return false;
+    
+    return func.apply(this, args);
 }
 
 var isFunction = function(input) {
