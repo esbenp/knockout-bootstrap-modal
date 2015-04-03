@@ -306,11 +306,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     Template.prototype.insertTemplate = function(templateContent) {
         var modalBody = evaluateInputAsNodeElement(this.instance.settings.body, this.instance.container);
-        var templateElement = $(templateContent);
-
-        if (templateElement.length === 0) {
-            templateElement = $("<p/>").html(templateContent);
-        }
+        var templateElement = $($.parseHTML(templateContent));
 
         modalBody.html("");
         templateElement.appendTo(modalBody);
