@@ -101,6 +101,16 @@
         return this;
     };
 
+    Modal.prototype.footer = function footer(footer) {
+        this.variables.templateVariables.footer(footer);
+        return this;
+    }
+
+    Modal.prototype.header = function header(header) {
+        this.variables.templateVariables.header(header);
+        return this;
+    }
+
     Modal.prototype.hide = function() {
         this.container.modal("hide");
         return this;

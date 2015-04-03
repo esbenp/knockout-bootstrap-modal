@@ -43,6 +43,8 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, 
             var instance = modal()
             .template("asd asdas dasd asdasdas as ?")
             .large()
+            .header(false)
+            .footer(false) 
             .title("Something")
             .save(function(promise, viewmodel){
                 promise.resolve(true);
