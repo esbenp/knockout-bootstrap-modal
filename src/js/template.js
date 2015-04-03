@@ -17,10 +17,14 @@
 
     Template.prototype.insertTemplate = function(templateContent) {
         var modalBody = evaluateInputAsNodeElement(this.instance.settings.body, this.instance.container);
-        var templateContent = $(templateContent);
+        var templateElement = $(templateContent);
+
+        if (templateElement.length === 0) {
+            templateElement = $("<p/>").html(templateContent);
+        }
 
         modalBody.html("");
-        templateContent.appendTo(modalBody);
+        templateElement.appendTo(modalBody);
     }
 
     Template.prototype.loadExternalUsingjQuery = function(template, promise) {

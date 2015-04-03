@@ -65,7 +65,7 @@
     };
 
     Factory.prototype.onModalHide = function() {
-        if (this.instance.variables.saving === false) {
+        if (this.instance.variables.saving === false && this.instance.undeRedoStack) {
             var undo = this.instance.undoRedoStack.undoCommand;
 
             // One execution will only move 1 step back in history

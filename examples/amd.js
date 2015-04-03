@@ -15,10 +15,13 @@ requirejs.config({
         "knockout-bootstrap-modal-html": "../dist/html/modal.html",
         "knockout-selectize": "knockout-selectize/src/js/knockout-selectize",
         "knockout-selectize-html": "knockout-selectize/src/html",
+        "knockout-subscriptions-manager": "knockout-subscriptions-manager/dist/knockout-subscriptions-manager",
+        "knockout-change-subscriber": "knockout-change-subscriber/dist/knockout-change-subscriber",
         microplugin: "microplugin/src/microplugin",
         "selectable-placeholder": "knockout-selectize/plugins/selectablePlaceholder",
         selectize: "selectize/dist/js/selectize",
-        sifter: "sifter/sifter.min"
+        sifter: "sifter/sifter.min",
+        underscore: "underscore/underscore"
     },
     shim: {
         bootstrap: {
@@ -27,7 +30,7 @@ requirejs.config({
     }
 });
 
-requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-selectize", "knockout-undomanager"], function(ko, modal, selectize, undomanager){
+requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, selectize, undomanager){
     function ViewModel() {
         this.viewmodel = {
             variable: ko.observable()
@@ -38,10 +41,9 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-selectize",
         openModal: function() {
             var self = this;
             var instance = modal()
-            .template("assets/modal.html", true)
+            .template("asd")
             .large()
             .title("Something")
-            .viewmodel(self.viewmodel)
             .save(function(promise, viewmodel){
                 promise.resolve(true);
             })
