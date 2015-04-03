@@ -15,10 +15,10 @@
             <!-- ko if: templateVariables.footer() === true -->
                 <div class="modal-footer">
                     <!-- ko if: templateVariables.closeButton() === true -->
-                        <button type="button" class="btn btn-default" data-bind="click: closeClick">Close</button>
+                        <button type="button" class="btn btn-default" data-bind="click: closeClick, text: templateVariables.closeButtonLabel"></button>
                     <!-- /ko -->
                     <!-- ko if: templateVariables.saveButton() === true -->
-                        <button type="button" class="btn btn-primary" data-bind="click: saveClick">Save changes</button>
+                        <button type="button" class="btn btn-primary" data-bind="click: saveClick, text: templateVariables.saveButtonLabel"></button>
                     <!-- /ko -->
                 </div>
             <!-- /ko -->

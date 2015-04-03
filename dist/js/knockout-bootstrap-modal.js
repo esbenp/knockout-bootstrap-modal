@@ -143,11 +143,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         template: "<div></div>",
         templateVariables: {
             closeButton: true,
+            closeButtonLabel: "Cancel",
             closeCross: true,
             footer: true,
             header: true,
             large: false,
             saveButton: true,
+            saveButtonLabel: "Save changes",
             title: false
         },
         viewmodel: {}
@@ -204,6 +206,11 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         return this;
     };
 
+    Modal.prototype.closeButtonLabel = function(closeButtonLabel) {
+        this.variables.templateVariables.closeButtonLabel(closeButtonLabel);
+        return this;
+    }
+
     Modal.prototype.closeCross = function(closeCross) {
         this.variables.templateVariables.closeCross(closeCross);
         return this;
@@ -257,6 +264,11 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     Modal.prototype.saveButton = function(saveButton) {
         this.variables.templateVariables.saveButton(saveButton);
+        return this;
+    }
+
+    Modal.prototype.saveButtonLabel = function(saveButtonLabel) {
+        this.variables.templateVariables.saveButtonLabel(saveButtonLabel);
         return this;
     }
 
