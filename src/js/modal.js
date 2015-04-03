@@ -7,11 +7,13 @@
 (function(namespace){
     "use strict";
 
-    var Modal = function(modal, settings) {
+    var Modal = function(modal, settings, callbacks) {
         this.container;
-        this.settings = $.extend(Modal.DEFAULTS, settings || {});
+        this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
         this.variables = {};
         reset.call(this);
+
+        $.extend(this.variables.callbacks, callbacks);
 
         this.factory = new namespace.Factory(this, modal);
     }
@@ -188,7 +190,15 @@
         return this;
     };
 
-    namespace.Modal = function() {
+    namespace.Modal = function(replace) {
+        if (replace === false) {
+            return new Modal(undefined, {}, {
+                hidden: function(container) {
+                    container.remove();
+                }
+            });
+        }
+
         if (namespace.Modal.prototype._singletonInstance) {
             reset.call(namespace.Modal.prototype._singletonInstance);
             return namespace.Modal.prototype._singletonInstance;

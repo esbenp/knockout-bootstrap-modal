@@ -87,6 +87,10 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         }
     }
 
+    Factory.prototype.onModalHidden = function() {
+        fireIfFunction(this.instance.variables.callbacks.hidden, this.instance.container);
+    }
+
     Factory.prototype.setContainer = function(container) {
         var container = this.evaluateContainerInput(container);
 
@@ -101,6 +105,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     Factory.prototype.setupEvents = function() {
         this.instance.container.on("hide.bs.modal", this.onModalHide.bind(this));
+        this.instance.container.on("hidden.bs.modal", this.onModalHidden.bind(this));
     }
 
     namespace.Factory = Factory;
@@ -115,11 +120,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 (function(namespace){
     "use strict";
 
-    var Modal = function(modal, settings) {
+    var Modal = function(modal, settings, callbacks) {
         this.container;
-        this.settings = $.extend(Modal.DEFAULTS, settings || {});
+        this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
         this.variables = {};
         reset.call(this);
+
+        $.extend(this.variables.callbacks, callbacks);
 
         this.factory = new namespace.Factory(this, modal);
     }
@@ -296,7 +303,15 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         return this;
     };
 
-    namespace.Modal = function() {
+    namespace.Modal = function(replace) {
+        if (replace === false) {
+            return new Modal(undefined, {}, {
+                hidden: function(container) {
+                    container.remove();
+                }
+            });
+        }
+
         if (namespace.Modal.prototype._singletonInstance) {
             reset.call(namespace.Modal.prototype._singletonInstance);
             return namespace.Modal.prototype._singletonInstance;

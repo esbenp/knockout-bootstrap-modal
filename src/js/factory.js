@@ -76,6 +76,10 @@
         }
     }
 
+    Factory.prototype.onModalHidden = function() {
+        fireIfFunction(this.instance.variables.callbacks.hidden, this.instance.container);
+    }
+
     Factory.prototype.setContainer = function(container) {
         var container = this.evaluateContainerInput(container);
 
@@ -90,6 +94,7 @@
 
     Factory.prototype.setupEvents = function() {
         this.instance.container.on("hide.bs.modal", this.onModalHide.bind(this));
+        this.instance.container.on("hidden.bs.modal", this.onModalHidden.bind(this));
     }
 
     namespace.Factory = Factory;
