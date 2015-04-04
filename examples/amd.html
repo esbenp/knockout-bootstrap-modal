@@ -11,8 +11,12 @@
 <body>
 
     <div id="container">
-        <button class="btn btn-large btn-success" data-bind="click: openModal">Yo</button>
-        <div data-bind="text: viewmodel.variable"></div>
+        <div data-bind="text: simple"></div>
+        <div data-bind="foreach: variants">
+            <div data-bind="foreach: test">
+                <div data-bind="text: currency"></div>
+            </div>
+        </div>
     </div>
 
 </body>

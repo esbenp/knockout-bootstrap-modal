@@ -59,11 +59,16 @@
     }
 
     var saveClick = function(context, e) {
+        var self = this;
         // Used so the viewmodel is not reverted back when users click
         // the save button.
         this.variables.saving = true;
 
         var promise = this.factory.createHidingPromise();
+
+        $.when(promise).then(function(){
+            self.variables.saving = false;
+        });
 
         // If there is specified a save callback, send a hide promise
         // so the modal can be hidden if a certain logic passes
@@ -74,8 +79,6 @@
         } else {
             promise.resolve(true);
         }
-
-        this.variables.saving = false;
 
         return true;
     }

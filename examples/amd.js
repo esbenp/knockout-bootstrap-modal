@@ -13,6 +13,7 @@ requirejs.config({
         text: "requirejs-text/text",
 
         "knockout-bootstrap-modal-html": "../dist/html/modal.html",
+        "knockout-memento": "knockout-memento-bower/dist/knockout-memento-bower",
         "knockout-selectize": "knockout-selectize/src/js/knockout-selectize",
         "knockout-selectize-html": "knockout-selectize/src/html",
         "knockout-subscriptions-manager": "knockout-subscriptions-manager/dist/knockout-subscriptions-manager",
@@ -30,26 +31,43 @@ requirejs.config({
     }
 });
 
-requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, selectize, undomanager){
+requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-memento"], function(ko, modal, ko){
     function ViewModel() {
-        this.viewmodel = {
-            variable: ko.observable()
-        }
+        this.variants = ko.observableArray([new VariantModel([
+                new PriceModel("USD")
+            ])]);
+        this.simple = ko.observable("Undo");
+    }
+
+    function VariantModel(prices) {
+        this.prices = ko.observableArray(prices);
+
+        this.test = ko.computed(function() {
+            return this.prices();
+        }, this);
+
+        //this.yooyoyoyo.watch(false);
+    }
+
+    function PriceModel(currency) {
+        this.currency = ko.observable(currency);
     }
 
     ViewModel.prototype = {
         openModal: function() {
             var self = this;
+
             var instance = modal()
             .template("assets/modal.html", true)
             .large()
             .title("Something")
             .viewmodel({
-                action: function(){
-                    modal(false)
-                        .template("TEST")
-                        .show();
-                }
+                add: function() {
+                    self.variants()[0].prices.push(new PriceModel("DKK"));
+                    self.simple("YO");
+                },
+                simple: self.simple,
+                variants: self.variants
             })
             .save(function(promise, viewmodel){
                 promise.resolve(true);
@@ -58,5 +76,8 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal, 
         }
     };
 
-    ko.applyBindings(new ViewModel, document.getElementById("container"))
+    var instance = new ViewModel;
+    ko.applyBindings(instance, document.getElementById("container"));
+
+    instance.openModal();
 });
