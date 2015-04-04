@@ -1,7 +1,8 @@
 {
   "name": "knockout-bootstrap-modal",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "homepage": "https://github.com/esbenp/knockout-bootstrap-modal",
+  "main": "dist",
   "license": "Apache 2.0",
   "ignore": [
     "**/.*",
