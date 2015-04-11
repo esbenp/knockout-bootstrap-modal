@@ -249,6 +249,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         return this;
     }
 
+    Modal.prototype.prompt = function prompt() {
+        this.header(false);
+        this.closeButton(false);
+        this.saveButtonLabel("Ok");
+        return this;
+    }
+
     Modal.prototype.show = function() {
         var self = this;
 

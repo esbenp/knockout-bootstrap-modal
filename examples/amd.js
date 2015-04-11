@@ -60,6 +60,7 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-memento"], 
             var instance = modal()
             .template("assets/modal.html", true)
             .large()
+            .prompt()
             .title("Something")
             .viewmodel({
                 add: function() {
