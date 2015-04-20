@@ -32,6 +32,8 @@ requirejs.config({
 });
 
 requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-memento"], function(ko, modal, ko){
+    modal.prototype.setDefaultOption("promptExternalTemplate", "assets/prompt.html");
+
     function ViewModel() {
         this.variants = ko.observableArray([new VariantModel([
                 new PriceModel("USD")
@@ -57,20 +59,14 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-memento"], 
         openModal: function() {
             var self = this;
 
+            var observable = ko.observable();
+
             var instance = modal()
-            .template("assets/modal.html", true)
             .large()
-            .prompt()
+            .prompt(observable, "YO")
             .title("Something")
-            .viewmodel({
-                add: function() {
-                    self.variants()[0].prices.push(new PriceModel("DKK"));
-                    self.simple("YO");
-                },
-                simple: self.simple,
-                variants: self.variants
-            })
             .save(function(promise, viewmodel){
+                console.log(viewmodel.prompt());
                 promise.resolve(true);
             })
             .show();

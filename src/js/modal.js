@@ -30,6 +30,9 @@
         closeClick: null,
         saveClick: null,
         saving: false,
+        promptExternalTemplate: false,
+        promptInputTemplate: "<input type='text' data-bind='value: prompt'>",
+        promptTextTemplate: "<p data-bind='text: text'></p>",
         // templateIsExternal has to be before template, so when 
         // resetting, template's subscriber will pick up the new 
         // templateIsExternal value as well.
@@ -89,8 +92,21 @@
             saveClick: saveClick.bind(this)
         });
         mapping.fromJS(variables, {
-            copy: ["saving", "templateIsExternal"]
+            copy: [
+                    "promptExternalTemplate",
+                    "promptInputTemplate",
+                    "promptTextTemplate",
+                    "saving",
+                    "templateIsExternal"
+                ]
         }, this.variables);
+    }
+
+    Modal.prototype.alert = function alert() {
+        this.header(false);
+        this.closeButton(false);
+        this.saveButtonLabel("Ok");
+        return this;
     }
 
     Modal.prototype.close = function(closeFunction) {
@@ -136,10 +152,26 @@
         return this;
     }
 
-    Modal.prototype.prompt = function prompt() {
+    Modal.prototype.prompt = function prompt(observable, text) {
+        this.viewmodel({
+            prompt: observable,
+            text: text
+        });
         this.header(false);
-        this.closeButton(false);
         this.saveButtonLabel("Ok");
+
+        if (this.variables.promptExternalTemplate === false) {
+            var template = "";
+            if (text !== undefined) {
+                template += this.variables.promptTextTemplate;
+            }
+            template += this.variables.promptInputTemplate;
+
+            this.template(template, false);
+        } else {
+            this.template(this.variables.promptExternalTemplate, true);
+        }
+
         return this;
     }
 
@@ -160,6 +192,11 @@
         
         return this;
     };
+
+    Modal.prototype.setDefaultOption = function setDefaultOption(key, value) {
+        Modal.VARIABLE_DEFAULTS[key] = value;
+        return this;
+    }
 
     Modal.prototype.save = function(saveFunction) {
         this.variables.callbacks.save = saveFunction;
@@ -219,4 +256,8 @@
 
         return instance;
     };
+
+    namespace.Modal.prototype.setDefaultOption = function setDefaultOption(key, value) {
+        Modal.VARIABLE_DEFAULTS[key] = value;
+    }
 })(KnockoutBootstrapModal);
