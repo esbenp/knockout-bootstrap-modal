@@ -75,7 +75,11 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         });
     };
 
-    Factory.prototype.onModalHide = function() {
+    Factory.prototype.onModalHide = function(e) {
+        if (e.target !== this.instance.container[0]) {
+            return false;
+        }
+
         if (this.instance.variables.saving === false && this.instance.undoRedoStack !== undefined) {
             var undo = this.instance.undoRedoStack.undoCommand;
 
