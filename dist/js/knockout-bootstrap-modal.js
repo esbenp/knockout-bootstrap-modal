@@ -233,7 +233,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.viewmodel({
             text: text
         });
-        this.template(this.settings.alertTemplate, this.settings.alertExternalTemplate);
+        this.template(this.variables.alertTemplate, this.variables.alertExternalTemplate);
         this.header(false);
         this.closeButton(false);
         this.saveButtonLabel(this.variables.templateVariables.saveButtonLabelAlert());
