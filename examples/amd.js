@@ -31,8 +31,14 @@ requirejs.config({
     }
 });
 
-requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-memento"], function(ko, modal, ko){
-    modal.prototype.setDefaultOption("promptExternalTemplate", "assets/prompt.html");
+requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
+    //modal.prototype.setDefaultOption("promptExternalTemplate", "assets/prompt.html");
+    modal.prototype.extendDefaultOptions({
+        promptExternalTemplate: "assets/prompt.html",
+        templateVariables: {
+            closeButtonLabel: "est"
+        }
+    })
 
     function ViewModel() {
         this.variants = ko.observableArray([new VariantModel([
@@ -62,12 +68,9 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal", "knockout-memento"], 
             var observable = ko.observable();
 
             var instance = modal()
-            .large()
-            .prompt(observable, "YO")
-            .title("Something")
-            .save(function(promise, viewmodel){
-                console.log(viewmodel.prompt());
-                promise.resolve(true);
+            .template("HAHAHAA")
+            .save(function(){
+
             })
             .show();
         }

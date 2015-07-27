@@ -117,7 +117,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
 /**
  * MODAL
- * 
+ *
  * @param  {[type]} namespace [description]
  * @return {[type]}           [description]
  */
@@ -127,6 +127,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     var Modal = function(modal, settings, callbacks) {
         this.container;
         this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
+        console.log(this.settings);
         this.variables = {};
         reset.call(this);
 
@@ -150,8 +151,8 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         promptExternalTemplate: false,
         promptInputTemplate: "<input type='text' data-bind='value: prompt'>",
         promptTextTemplate: "<p data-bind='text: text'></p>",
-        // templateIsExternal has to be before template, so when 
-        // resetting, template's subscriber will pick up the new 
+        // templateIsExternal has to be before template, so when
+        // resetting, template's subscriber will pick up the new
         // templateIsExternal value as well.
         templateIsExternal: false,
         template: "<div></div>",
@@ -205,7 +206,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     var reset = function() {
         var variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
-            closeClick: closeClick.bind(this), 
+            closeClick: closeClick.bind(this),
             saveClick: saveClick.bind(this)
         });
         mapping.fromJS(variables, {
@@ -245,6 +246,17 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.variables.templateVariables.closeCross(closeCross);
         return this;
     };
+
+    Modal.prototype.confirm = function confirm(text) {
+        this.viewmodel({
+            text: text
+        });
+        this.template("<p data-bind='text: text'></p>");
+        this.header(false);
+        this.closeButtonLabel('No');
+        this.saveButtonLabel('Yes');
+        return this;
+    }
 
     Modal.prototype.footer = function footer(footer) {
         this.variables.templateVariables.footer(footer);
@@ -295,18 +307,18 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     Modal.prototype.show = function() {
         var self = this;
 
-        // Knockout bindings cannot be applied until the subview has been 
+        // Knockout bindings cannot be applied until the subview has been
         // inserted. Otherwise, component elements are not going to be
         // rendered
         $.when(this.templatePromise).then(function(){
-            // Have to clean node before, as to not reapply bindings 
+            // Have to clean node before, as to not reapply bindings
             ko.cleanNode(self.container[0]);
             // Has to be done here, as cleanNode will remove events
             self.factory.setupEvents();
             ko.applyBindings(self.variables, self.container[0]);
-            self.container.modal("show");   
+            self.container.modal("show");
         });
-        
+
         return this;
     };
 
@@ -340,8 +352,8 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             this.variables.templateIsExternal = external;
         }
 
-        // Should be after the external variable, so the new 
-        // external value is picked up by the template variables 
+        // Should be after the external variable, so the new
+        // external value is picked up by the template variables
         // subscribers
         this.variables.template(input);
 
@@ -377,7 +389,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     namespace.Modal.prototype.setDefaultOption = function setDefaultOption(key, value) {
         Modal.VARIABLE_DEFAULTS[key] = value;
     }
+
+    namespace.Modal.prototype.extendDefaultOptions = function extendDefaultOptions(options)
+    {
+        $.extend(true, Modal.VARIABLE_DEFAULTS, options);
+    }
 })(KnockoutBootstrapModal);
+
 
 /**
  * FACTORY
