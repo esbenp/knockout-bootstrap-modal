@@ -101,6 +101,8 @@
         });
         mapping.fromJS(variables, {
             copy: [
+                    "alertTemplate",
+                    "alertExternalTemplate",
                     "promptExternalTemplate",
                     "promptInputTemplate",
                     "promptTextTemplate",
@@ -117,7 +119,7 @@
         this.template(this.settings.alertTemplate, this.settings.alertExternalTemplate);
         this.header(false);
         this.closeButton(false);
-        this.saveButtonLabel(this.settings.templateVariables.saveButtonLabelAlert);
+        this.saveButtonLabel(this.variables.templateVariables.saveButtonLabelAlert());
         return this;
     }
 
@@ -144,8 +146,8 @@
     Modal.prototype.confirm = function confirm(text) {
         this.alert(text);
         this.closeButton(true);
-        this.closeButtonLabel(this.settings.templateVariables.closeButtonLabelConfirm);
-        this.saveButtonLabel(this.settings.templateVariables.saveButtonLabelConfirm);
+        this.closeButtonLabel(this.variables.templateVariables.closeButtonLabelConfirm());
+        this.saveButtonLabel(this.variables.templateVariables.saveButtonLabelConfirm());
         return this;
     }
 
@@ -178,8 +180,8 @@
             text: text
         });
         this.header(false);
-        this.closeButtonLabel(this.templateVariables.closeButtonLabelPrompt);
-        this.saveButtonLabel(this.templateVariables.saveButtonLabelPrompt);
+        this.closeButtonLabel(this.variables.templateVariables.closeButtonLabelPrompt());
+        this.saveButtonLabel(this.variables.templateVariables.saveButtonLabelPrompt());
 
         if (this.variables.promptExternalTemplate === false) {
             var template = "";
