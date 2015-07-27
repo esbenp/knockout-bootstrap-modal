@@ -36,7 +36,10 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
     modal.prototype.extendDefaultOptions({
         promptExternalTemplate: "assets/prompt.html",
         templateVariables: {
-            closeButtonLabel: "est"
+            closeButtonLabel: 'Normal close',
+            closeButtonLabelConfirm: 'Test confirm',
+            saveButtonLabelConfirm: 'TEST YES confirm',
+            saveButtonLabelAlert: 'Alert yes'
         }
     })
 
@@ -68,10 +71,11 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
             var observable = ko.observable();
 
             var instance = modal()
-            .template("HAHAHAA")
-            .save(function(){
+            .alert('test')
+            .show();
 
-            })
+            modal(false)
+            .confirm('asdasdasd')
             .show();
         }
     };

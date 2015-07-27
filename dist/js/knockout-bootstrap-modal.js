@@ -148,6 +148,8 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         closeClick: null,
         saveClick: null,
         saving: false,
+        alertExternalTemplate: false,
+        alertTemplate: '<p data-bind=\'text: text\'></p>',
         promptExternalTemplate: false,
         promptInputTemplate: "<input type='text' data-bind='value: prompt'>",
         promptTextTemplate: "<p data-bind='text: text'></p>",
@@ -159,12 +161,17 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         templateVariables: {
             closeButton: true,
             closeButtonLabel: "Cancel",
+            closeButtonLabelPrompt: "Cancel",
+            closeButtonLabelConfirm: "Cancel",
             closeCross: true,
             footer: true,
             header: true,
             large: false,
             saveButton: true,
             saveButtonLabel: "Save changes",
+            saveButtonLabelAlert: "Ok",
+            saveButtonLabelConfirm: "Confirm",
+            saveButtonLabelPrompt: "Save changes",
             title: false
         },
         viewmodel: {}
@@ -220,10 +227,14 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         }, this.variables);
     }
 
-    Modal.prototype.alert = function alert() {
+    Modal.prototype.alert = function alert(text) {
+        this.viewmodel({
+            text: text
+        });
+        this.template(this.settings.alertTemplate, this.settings.alertExternalTemplate);
         this.header(false);
         this.closeButton(false);
-        this.saveButtonLabel("Ok");
+        this.saveButtonLabel(this.settings.templateVariables.saveButtonLabelAlert);
         return this;
     }
 
@@ -248,13 +259,10 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     };
 
     Modal.prototype.confirm = function confirm(text) {
-        this.viewmodel({
-            text: text
-        });
-        this.template("<p data-bind='text: text'></p>");
-        this.header(false);
-        this.closeButtonLabel('No');
-        this.saveButtonLabel('Yes');
+        this.alert(text);
+        this.closeButton(true);
+        this.closeButtonLabel(this.settings.templateVariables.closeButtonLabelConfirm);
+        this.saveButtonLabel(this.settings.templateVariables.saveButtonLabelConfirm);
         return this;
     }
 
@@ -287,7 +295,8 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             text: text
         });
         this.header(false);
-        this.saveButtonLabel("Ok");
+        this.closeButtonLabel(this.templateVariables.closeButtonLabelPrompt);
+        this.saveButtonLabel(this.templateVariables.saveButtonLabelPrompt);
 
         if (this.variables.promptExternalTemplate === false) {
             var template = "";
