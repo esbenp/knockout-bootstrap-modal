@@ -10,7 +10,6 @@
     var Modal = function(modal, settings, callbacks) {
         this.container;
         this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
-        console.log(this.settings);
         this.variables = {};
         reset.call(this);
 
@@ -95,20 +94,21 @@
     }
 
     var reset = function() {
-        var variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
+        var variables = $.extend(true, {}, Modal.VARIABLE_DEFAULTS, {
             closeClick: closeClick.bind(this),
             saveClick: saveClick.bind(this)
         });
+
         mapping.fromJS(variables, {
             copy: [
-                    "alertTemplate",
-                    "alertExternalTemplate",
-                    "promptExternalTemplate",
-                    "promptInputTemplate",
-                    "promptTextTemplate",
-                    "saving",
-                    "templateIsExternal"
-                ]
+                'alertTemplate',
+                'alertExternalTemplate',
+                'promptExternalTemplate',
+                'promptInputTemplate',
+                'promptTextTemplate',
+                'saving',
+                'templateIsExternal'
+            ]
         }, this.variables);
     }
 
@@ -209,6 +209,7 @@
             ko.cleanNode(self.container[0]);
             // Has to be done here, as cleanNode will remove events
             self.factory.setupEvents();
+
             ko.applyBindings(self.variables, self.container[0]);
             self.container.modal("show");
         });

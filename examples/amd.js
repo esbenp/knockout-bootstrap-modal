@@ -63,19 +63,34 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
     function PriceModel(currency) {
         this.currency = ko.observable(currency);
     }
-
+var i = 0;
     ViewModel.prototype = {
         openModal: function() {
             var self = this;
+console.log("OPEN MODAL 1");
+            var observable = ko.observable();
+            var instance = modal()
+            .confirm('test')
+            .title('HEY')
+            .header(true)
+            .saveButtonLabel(i)
+            .large()
+            .save(function(promise){
+                console.log("CALLBACK 1");
+                promise.resolve();
+            })
+            .show();
 
+i++
+
+        },
+        openModal2: function() {
+            var self = this;
+console.log("OPEN MODAL 2");
             var observable = ko.observable();
 
             var instance = modal()
             .alert('test')
-            .show();
-
-            modal(false)
-            .confirm('asdasdasd')
             .show();
         }
     };

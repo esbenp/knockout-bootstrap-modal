@@ -11,7 +11,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
 /**
  * FACTORY
- * 
+ *
  * @param  {[type]} namespace [description]
  * @return {[type]}           [description]
  */
@@ -22,7 +22,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.instance = instance;
         this.initialize(container);
         this.initializeModal();
-        
+
         var template = new namespace.Template(this.instance);
     }
 
@@ -42,7 +42,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         var appendTo  = $(this.instance.settings.appendContainerTo);
 
         if (appendTo.length === 0) {
-            throw Error("Knockout-bootstrap-modal: Could not find an element with selector '" + 
+            throw Error("Knockout-bootstrap-modal: Could not find an element with selector '" +
                         this.instance.settings.appendContainerTo + "' to append the modal container " +
                         "to.");
         }
@@ -115,6 +115,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     namespace.Factory = Factory;
 })(KnockoutBootstrapModal);
 
+
 /**
  * MODAL
  *
@@ -127,7 +128,6 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     var Modal = function(modal, settings, callbacks) {
         this.container;
         this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
-        console.log(this.settings);
         this.variables = {};
         reset.call(this);
 
@@ -212,20 +212,21 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     }
 
     var reset = function() {
-        var variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
+        var variables = $.extend(true, {}, Modal.VARIABLE_DEFAULTS, {
             closeClick: closeClick.bind(this),
             saveClick: saveClick.bind(this)
         });
+
         mapping.fromJS(variables, {
             copy: [
-                    "alertTemplate",
-                    "alertExternalTemplate",
-                    "promptExternalTemplate",
-                    "promptInputTemplate",
-                    "promptTextTemplate",
-                    "saving",
-                    "templateIsExternal"
-                ]
+                'alertTemplate',
+                'alertExternalTemplate',
+                'promptExternalTemplate',
+                'promptInputTemplate',
+                'promptTextTemplate',
+                'saving',
+                'templateIsExternal'
+            ]
         }, this.variables);
     }
 
@@ -326,6 +327,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
             ko.cleanNode(self.container[0]);
             // Has to be done here, as cleanNode will remove events
             self.factory.setupEvents();
+
             ko.applyBindings(self.variables, self.container[0]);
             self.container.modal("show");
         });

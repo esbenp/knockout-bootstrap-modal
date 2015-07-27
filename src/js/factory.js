@@ -1,6 +1,6 @@
 /**
  * FACTORY
- * 
+ *
  * @param  {[type]} namespace [description]
  * @return {[type]}           [description]
  */
@@ -11,7 +11,7 @@
         this.instance = instance;
         this.initialize(container);
         this.initializeModal();
-        
+
         var template = new namespace.Template(this.instance);
     }
 
@@ -31,7 +31,7 @@
         var appendTo  = $(this.instance.settings.appendContainerTo);
 
         if (appendTo.length === 0) {
-            throw Error("Knockout-bootstrap-modal: Could not find an element with selector '" + 
+            throw Error("Knockout-bootstrap-modal: Could not find an element with selector '" +
                         this.instance.settings.appendContainerTo + "' to append the modal container " +
                         "to.");
         }
