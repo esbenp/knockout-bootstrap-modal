@@ -127,8 +127,6 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     var Modal = function(modal, settings, callbacks) {
         this.container;
         this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
-        console.log(this.settings);
-        this.variables = {};
         reset.call(this);
 
         $.extend(this.variables.callbacks, callbacks);
@@ -212,10 +210,12 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
     }
 
     var reset = function() {
+        this.variables = {};
         var variables = $.extend({}, Modal.VARIABLE_DEFAULTS, {
             closeClick: closeClick.bind(this),
             saveClick: saveClick.bind(this)
         });
+
         mapping.fromJS(variables, {
             copy: [
                     "alertTemplate",

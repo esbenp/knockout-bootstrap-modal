@@ -71,11 +71,20 @@ requirejs(["knockout", "dist/js/knockout-bootstrap-modal"], function(ko, modal){
             var observable = ko.observable();
 
             var instance = modal()
-            .alert('test')
+            .confirm('test')
+            .save(function(promise){
+                console.log("CALLBACK 1");
+                promise.resolve();
+            })
             .show();
+        },
+        openModal2: function() {
+            var self = this;
 
-            modal(false)
-            .confirm('asdasdasd')
+            var observable = ko.observable();
+
+            var instance = modal()
+            .alert('test')
             .show();
         }
     };
