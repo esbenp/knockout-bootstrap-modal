@@ -90,8 +90,24 @@ console.log("OPEN MODAL 2");
             var observable = ko.observable();
 
             var instance = modal()
+            .confirm('test')
+            .save(function(promise){
+                console.log("CALLBACK 1");
+                promise.resolve();
+            })
+            .show();
+<<<<<<< HEAD
+=======
+        },
+        openModal2: function() {
+            var self = this;
+
+            var observable = ko.observable();
+
+            var instance = modal()
             .alert('test')
             .show();
+>>>>>>> af1dd2eac61df31e280a9c38f5962cd8f9f6fe0f
         }
     };
 

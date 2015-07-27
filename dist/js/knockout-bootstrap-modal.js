@@ -129,6 +129,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         this.container;
         this.settings = $.extend({}, Modal.DEFAULTS, settings || {});
         this.variables = {};
+
         reset.call(this);
 
         $.extend(this.variables.callbacks, callbacks);
