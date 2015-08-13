@@ -270,13 +270,13 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         return this;
     }
 
-    Modal.prototype.footer = function footer(footer) {
-        this.variables.templateVariables.footer(footer);
+    Modal.prototype.footer = function footer(footerArg) {
+        this.variables.templateVariables.footer(footerArg);
         return this;
     }
 
-    Modal.prototype.header = function header(header) {
-        this.variables.templateVariables.header(header);
+    Modal.prototype.header = function header(headerArg) {
+        this.variables.templateVariables.header(headerArg);
         return this;
     }
 
