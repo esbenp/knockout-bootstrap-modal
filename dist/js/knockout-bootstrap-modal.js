@@ -456,7 +456,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         var self = this;
         var promise = $.Deferred();
 
-        $.when(promise).then(function(templateContent){
+        promise.then(function(templateContent){
             self.insertTemplate(templateContent);
         });
 
