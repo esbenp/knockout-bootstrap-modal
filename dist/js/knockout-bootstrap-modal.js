@@ -93,6 +93,7 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
 
     Factory.prototype.onModalHidden = function() {
         fireIfFunction(this.instance.variables.callbacks.hidden, this.instance.container);
+        this.instance.container.remove()
     }
 
     Factory.prototype.setContainer = function(container) {
@@ -390,8 +391,8 @@ if (typeof KnockoutBootstrapModal === "undefined") { var KnockoutBootstrapModal 
         }
 
         if (namespace.Modal.prototype._singletonInstance) {
-            reset.call(namespace.Modal.prototype._singletonInstance);
-            return namespace.Modal.prototype._singletonInstance;
+            //reset.call(namespace.Modal.prototype._singletonInstance);
+            //return namespace.Modal.prototype._singletonInstance;
         }
 
         var instance = new Modal;

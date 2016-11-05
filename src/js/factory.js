@@ -82,6 +82,7 @@
 
     Factory.prototype.onModalHidden = function() {
         fireIfFunction(this.instance.variables.callbacks.hidden, this.instance.container);
+        this.instance.container.remove()
     }
 
     Factory.prototype.setContainer = function(container) {

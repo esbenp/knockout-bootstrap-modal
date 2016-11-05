@@ -272,8 +272,8 @@
         }
 
         if (namespace.Modal.prototype._singletonInstance) {
-            reset.call(namespace.Modal.prototype._singletonInstance);
-            return namespace.Modal.prototype._singletonInstance;
+            //reset.call(namespace.Modal.prototype._singletonInstance);
+            //return namespace.Modal.prototype._singletonInstance;
         }
 
         var instance = new Modal;
